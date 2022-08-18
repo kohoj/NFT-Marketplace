@@ -26,7 +26,7 @@ const ListingPage: NextPage = () => {
 
   // Initialize the marketplace contract
   const marketplace = useMarketplace(
-    "0x277C0FB19FeD09c785448B8d3a80a78e7A9B8952" // Your marketplace contract address here
+    process.env.NEXT_PUBLIC_MARKETPLACE_CONTRACT_ADDRESS // Your marketplace contract address here
   );
 
   // Fetch the listing from the marketplace contract
@@ -50,7 +50,7 @@ const ListingPage: NextPage = () => {
     try {
       // Ensure user is on the correct network
       if (networkMismatch) {
-        switchNetwork && switchNetwork(4);
+        switchNetwork && switchNetwork(ChainId.ArbitrumTestnet);
         return;
       }
 
@@ -59,7 +59,7 @@ const ListingPage: NextPage = () => {
         await marketplace?.direct.makeOffer(
           listingId, // The listingId of the listing we want to make an offer for
           1, // Quantity = 1
-          NATIVE_TOKENS[ChainId.Mumbai].wrapped.address, // Wrapped Ether address on Rinkeby
+          NATIVE_TOKENS[ChainId.ArbitrumTestnet].wrapped.address, // Wrapped Ether address on ArbitrumTestnet
           bidAmount // The offer amount the user entered
         );
       }
@@ -84,13 +84,17 @@ const ListingPage: NextPage = () => {
     try {
       // Ensure user is on the correct network
       if (networkMismatch) {
-        switchNetwork && switchNetwork(4);
+        switchNetwork && switchNetwork(ChainId.ArbitrumTestnet);
         return;
       }
 
       // Simple one-liner for buying the NFT
-      await marketplace?.buyoutListing(listingId, 1);
-      alert("NFT bought successfully!");
+      const transactionResult = await marketplace?.buyoutListing(listingId, 1);
+      // If the transaction succeeds, take the user back to the homepage to view their listing!
+      if (transactionResult) {
+        alert("NFT bought successfully!");
+        router.push(`/`);
+      }
     } catch (error) {
       console.error(error);
       alert(error);
