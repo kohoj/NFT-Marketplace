@@ -10,7 +10,6 @@ import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
   const router = useRouter();
-
   // Connect your marketplace smart contract here (replace this address)
   const marketplace = useMarketplace(
     process.env.NEXT_PUBLIC_MARKETPLACE_CONTRACT_ADDRESS
@@ -78,9 +77,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-function NEXT_PUBLIC_MARKETPLACE_CONTRACT_ADDRESS(
-  NEXT_PUBLIC_MARKETPLACE_CONTRACT_ADDRESS: any
-) {
-  throw new Error("Function not implemented.");
-}
